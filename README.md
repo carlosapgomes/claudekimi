@@ -26,7 +26,9 @@ python proxy.py
 
 ```
 
-### Using with one-liner
+## Running Claude Code
+
+### One-liner
 
 ```bash
 env ANTHROPIC_BASE_URL=http://localhost:7187 ANTHROPIC_API_KEY=not_needed CLAUDE_CODE_MAX_OUTPUT_TOKENS=16384  claude
@@ -128,7 +130,7 @@ If you use this, I'd love to hear about your experience with different providers
 
 ## Acknowledgements
 
-Inspired by [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq)
+Based on [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq)
 
 ## License
 

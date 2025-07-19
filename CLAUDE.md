@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ClaudeKimi is a proxy server that enables Claude Code to work with any OpenAI-compatible API. It is a FastAPI proxy server that enables using any OpenAI-compatible API with Claude Code, translating between Anthropic's API format and OpenAI's format. It supports any OpenAI-compatible provider including Groq, DeepInfra, Baseten, OpenRouter, Ollama, local models, and more.
+ClaudeKimi is a proxy server that enables Claude Code to work with any OpenAI-compatible API. It is a FastAPI proxy server that enables using any OpenAI-compatible API with Claude Code, translating between Anthropic's API format and OpenAI's format. It supports any OpenAI-compatible provider including Groq, DeepInfra, Baseten.
 
 ## Quick Start
 
@@ -62,30 +62,28 @@ PROXY_PORT=7187                     # Server port (default: 7187)
 export API_KEY=gqa_your_key_here
 export BASE_URL=https://api.groq.com/openai/v1
 export MODEL_NAME=moonshotai/kimi-k2-instruct
+export MAX_OUTPUT_TOKENS=16384
+export PROVIDER_NAME=groq
 ```
 
-**OpenRouter**
+**DeppInfra**
 
 ```bash
-export API_KEY=your_openrouter_key
-export BASE_URL=https://openrouter.ai/api/v1
-export MODEL_NAME=anthropic/claude-3-haiku
+export API_KEY=your_deepinfra_api_key_here
+export BASE_URL=https://api.deepinfra.com/v1/openai
+export MODEL_NAME=moonshotai/Kimi-K2-Instruct
+export MAX_OUTPUT_TOKENS=16384
+export PROVIDER_NAME=deepinfra
 ```
 
-**Ollama (Local)**
+**BaseTen**
 
 ```bash
-export API_KEY=dummy_key
-export BASE_URL=http://localhost:11434/v1
-export MODEL_NAME=llama3.1
-```
-
-**OpenAI**
-
-```bash
-export API_KEY=sk-your_openai_key
-export BASE_URL=https://api.openai.com/v1
-export MODEL_NAME=gpt-4-turbo-preview
+export API_KEY=your_baseten_api_key_here
+export BASE_URL=https://inference.baseten.co/v1
+export MODEL_NAME=moonshotai/Kimi-K2-Instruct
+export MAX_OUTPUT_TOKENS=16384
+export PROVIDER_NAME=baseten
 ```
 
 ## Architecture

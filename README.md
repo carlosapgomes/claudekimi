@@ -5,7 +5,7 @@ ClaudeKimi is an enhanced proxy for AI-assisted coding, based on [fakerybakery/c
 ## Features
 
 - Seamless integration of Claude Code with Kimi K2.
-- Extended support for additional inference providers (DeepInfra, BaseTen).
+- Tested with additional inference providers (DeepInfra, BaseTen).
 - Improvements to tool-calling functionality.
 
 ## Quick start (uv)
@@ -97,24 +97,6 @@ export BASE_URL=https://inference.baseten.co/v1
 export MODEL_NAME=moonshotai/Kimi-K2-Instruct
 export MAX_OUTPUT_TOKENS=16384
 export PROVIDER_NAME=baseten
-```
-
-**OpenRouter**
-
-```bash
-export API_KEY=your_openrouter_api_key
-export BASE_URL=https://openrouter.ai/api/v1
-export MODEL_NAME=anthropic/claude-3-haiku
-export PROVIDER_NAME=openrouter
-```
-
-**Local Ollama**
-
-```bash
-export API_KEY=dummy_key
-export BASE_URL=http://localhost:11434/v1
-export MODEL_NAME=llama3.1
-export PROVIDER_NAME=ollama
 ```
 
 **Custom Host/Port**

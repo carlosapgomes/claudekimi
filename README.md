@@ -6,9 +6,9 @@ A FastAPI proxy server that enables using any OpenAI-compatible API (Groq, OpenR
 
 ```bash
 # Set your API credentials (example with Groq)
-export OPENAI_API_KEY=YOUR_GROQ_API_KEY
-export OPENAI_BASE_URL=https://api.groq.com/openai/v1
-export OPENAI_MODEL_NAME=moonshotai/kimi-k2-instruct
+export API_KEY=YOUR_GROQ_API_KEY
+export BASE_URL=https://api.groq.com/openai/v1
+export MODEL_NAME=moonshotai/kimi-k2-instruct
 
 # one-time setup
 brew install astral-sh/uv/uv   # or pipx install uv
@@ -46,46 +46,62 @@ claude
 
 ## Configuration
 
-The proxy supports multiple OpenAI-compatible providers through environment variables:
+The proxy uses clean, provider-agnostic environment variables for any OpenAI-compatible API provider.
 
-### Primary Environment Variables
-- `OPENAI_API_KEY` - API key for your provider (required)
-- `OPENAI_BASE_URL` - Base URL for the OpenAI-compatible API (required)
-- `OPENAI_MODEL_NAME` - Model name to use (required)
-- `OPENAI_MAX_OUTPUT_TOKENS` - Maximum output tokens (optional, default: 16384)
-- `PROVIDER_NAME` - Human-readable provider name (optional, auto-detected)
-- `PROXY_HOST` - Host/IP address for the proxy server (optional, default: 0.0.0.0)
-- `PROXY_PORT` - Port number for the proxy server (optional, default: 7187)
+### **Required Configuration**
 
-### Legacy Environment Variables (Groq-specific, still supported)
-- `GROQ_API_KEY` - Groq API key (fallback for OPENAI_API_KEY)
-- `GROQ_BASE_URL` - Groq base URL (fallback for OPENAI_BASE_URL)
-- `GROQ_MODEL` - Groq model name (fallback for OPENAI_MODEL_NAME)
-- `GROQ_MAX_OUTPUT_TOKENS` - Groq max tokens (fallback for OPENAI_MAX_OUTPUT_TOKENS)
+- `API_KEY` - API key for your provider (required)
+- `BASE_URL` - Base URL for your OpenAI-compatible API provider (required)
+- `MODEL_NAME` - Model name to use with your provider (required)
 
-### Example Configurations
+### **Optional Configuration**
+
+- `MAX_OUTPUT_TOKENS` - Maximum output tokens (default: 16384)
+- `PROVIDER_NAME` - Human-readable provider name (auto-detected if not provided)
+- `PROXY_HOST` - Host/IP address for the proxy server (default: 0.0.0.0)
+- `PROXY_PORT` - Port number for the proxy server (default: 7187)
+
+### **Claude Code Integration Variables**
+
+- `ANTHROPIC_BASE_URL` - Set to <http://localhost:7187> when using the proxy
+- `ANTHROPIC_API_KEY` - Can be set to any value when using the proxy (optional)
+
+### **Example Configurations**
+
+**Quick Start (Groq default)**
+
+```bash
+export API_KEY=your_groq_api_key_here
+export BASE_URL=https://api.groq.com/openai/v1
+export MODEL_NAME=moonshotai/kimi-k2-instruct
+```
 
 **OpenRouter**
+
 ```bash
-export OPENAI_API_KEY=your_openrouter_api_key
-export OPENAI_BASE_URL=https://openrouter.ai/api/v1
-export OPENAI_MODEL_NAME=anthropic/claude-3-haiku
+export API_KEY=your_openrouter_api_key
+export BASE_URL=https://openrouter.ai/api/v1
+export MODEL_NAME=anthropic/claude-3-haiku
+export PROVIDER_NAME=openrouter
 ```
 
 **Local Ollama**
+
 ```bash
-export OPENAI_API_KEY=dummy_key
-export OPENAI_BASE_URL=http://localhost:11434/v1
-export OPENAI_MODEL_NAME=llama3.1
+export API_KEY=dummy_key
+export BASE_URL=http://localhost:11434/v1
+export MODEL_NAME=llama3.1
+export PROVIDER_NAME=ollama
 ```
 
 **Custom Host/Port**
+
 ```bash
 export PROXY_HOST=127.0.0.1
 export PROXY_PORT=8080
 ```
 
-## If you use this:
+## If you use this
 
 If you use this, I'd love to hear about your experience with different providers and how they compared! Please open an Issue to share your experience.
 

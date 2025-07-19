@@ -32,24 +32,21 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Configuration with defaults
+# Configuration with clean, provider-agnostic variable names
 class Config:
     def __init__(self):
-        self.api_key = (os.getenv("OPENAI_COMPATIBLE_API_KEY") or 
-                       os.getenv("OPENAI_API_KEY") or 
-                       os.getenv("GROQ_API_KEY"))
-        self.base_url = (os.getenv("OPENAI_COMPATIBLE_BASE_URL") or 
-                        os.getenv("OPENAI_BASE_URL") or 
-                        os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1"))
-        self.model_name = (os.getenv("OPENAI_COMPATIBLE_MODEL_NAME") or 
-                          os.getenv("OPENAI_MODEL_NAME") or 
-                          os.getenv("GROQ_MODEL", "moonshotai/kimi-k2-instruct"))
-        self.max_output_tokens = int(os.getenv("OPENAI_COMPATIBLE_MAX_OUTPUT_TOKENS") or 
-                                   os.getenv("OPENAI_MAX_OUTPUT_TOKENS") or 
-                                   os.getenv("GROQ_MAX_OUTPUT_TOKENS", "16384"))
-        self.provider_name = os.getenv("OPENAI_COMPATIBLE_PROVIDER_NAME") or os.getenv("PROVIDER_NAME", self._infer_provider_name())
+        self.api_key = os.getenv("API_KEY")
+        self.base_url = os.getenv("BASE_URL", "https://api.groq.com/openai/v1")
+        self.model_name = os.getenv("MODEL_NAME", "moonshotai/kimi-k2-instruct")
+        self.max_output_tokens = int(os.getenv("MAX_OUTPUT_TOKENS", "16384"))
+        self.provider_name = os.getenv("PROVIDER_NAME", self._infer_provider_name())
         self.host = os.getenv("PROXY_HOST", "0.0.0.0")
         self.port = int(os.getenv("PROXY_PORT", "7187"))
+        
+        if not self.api_key:
+            raise ValueError("API key is required. Set API_KEY environment variable.")
+        if not self.base_url:
+            raise ValueError("Base URL is required. Set BASE_URL environment variable.")
         
         if not self.api_key:
             raise ValueError("API key is required. Set OPENAI_API_KEY environment variable.")

@@ -1,7 +1,10 @@
 # ClaudeKimi
+ClaudeKimi is an enhanced proxy for AI-assisted coding, based on [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq). It enables Claude Code to work with Kimi K2 and adds support for multiple inference providers, including DeepInfra and BaseTen. Licensed under the MIT License (see [LICENSE.md](LICENSE.md) for details).
 
-ClaudeKimi is an enhanced proxy for AI-assisted coding, based on [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq). It enables seamless integration of Claude Code with Kimi K2 and extends support to multiple inference providers, including DeepInfra and BaseTen. Licensed under the MIT License.
-
+## Features
+- Seamless integration of Claude Code with Kimi K2.
+- Extended support for additional inference providers (DeepInfra, BaseTen).
+- Improvements to tool-calling functionality (addressing issues noted in the original project).
 ## Features
 
 - Run Claude Code with Kimi K2 for advanced coding assistance.

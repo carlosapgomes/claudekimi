@@ -106,6 +106,10 @@ export PROXY_HOST=127.0.0.1
 export PROXY_PORT=8080
 ```
 
+## AI-Assisted Development
+
+This project is been developed with significant assistance from AI tools, including ClaudeCode/Sonnet and ClaudeCode/KimiK2. These tools were used for code generation, optimization, and debugging. The code has been reviewed and tested by the maintainers to ensure quality and functionality.
+
 ## If you use this
 
 If you use this, I'd love to hear about your experience with different providers and how they compared! Please open an Issue to share your experience.

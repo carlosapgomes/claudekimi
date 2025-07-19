@@ -4,12 +4,7 @@ ClaudeKimi is an enhanced proxy for AI-assisted coding, based on [fakerybakery/c
 ## Features
 - Seamless integration of Claude Code with Kimi K2.
 - Extended support for additional inference providers (DeepInfra, BaseTen).
-- Improvements to tool-calling functionality (addressing issues noted in the original project).
-## Features
-
-- Run Claude Code with Kimi K2 for advanced coding assistance.
-- Generalized to support additional inference providers (DeepInfra, BaseTen).
-- Improves tool-calling functionality from the original project.
+- Improvements to tool-calling functionality.
 
 ## Quick start (uv)
 

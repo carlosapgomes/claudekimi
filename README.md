@@ -1,52 +1,47 @@
 # ClaudeKimi
+
 ClaudeKimi is an enhanced proxy for AI-assisted coding, based on [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq). It enables Claude Code to work with Kimi K2 and adds support for multiple inference providers, including DeepInfra and BaseTen. Licensed under the MIT License (see [LICENSE.md](LICENSE.md) for details).
 
 ## Features
+
 - Seamless integration of Claude Code with Kimi K2.
 - Extended support for additional inference providers (DeepInfra, BaseTen).
 - Improvements to tool-calling functionality.
 
 ## Quick start (uv)
 
+Install [uv](https://github.com/astral-sh/uv) (Unix Virtualenv) to manage the proxy's dependencies.
+
+The recommended way to configure the proxy is copying `.env.example` to `.env` and editing it with your API credentials.
+
 ```bash
-# Set your API credentials (example with Groq)
-export API_KEY=YOUR_GROQ_API_KEY
-export BASE_URL=https://api.groq.com/openai/v1
-export MODEL_NAME=moonshotai/kimi-k2-instruct
-
 # one-time setup
-brew install astral-sh/uv/uv   # or pipx install uv
-
 # project setup
 uv venv .venv
 source .venv/bin/activate
 uv pip install -e .
 
-# run the proxy (default: http://0.0.0.0:7187)
+# run the proxy (default: http://127.0.0.1:7187)
 python proxy.py
 
-# Or with custom host/port:
-# PROXY_HOST=127.0.0.1 PROXY_PORT=8080 python proxy.py
 ```
 
-Set the Anthropic Base URL to point to your proxy:
+### Using with one-liner
 
 ```bash
-export ANTHROPIC_BASE_URL=http://localhost:7187
-# Or use your custom host:port if configured differently
+env ANTHROPIC_BASE_URL=http://localhost:7187 ANTHROPIC_API_KEY=not_needed CLAUDE_CODE_MAX_OUTPUT_TOKENS=16384  claude
 ```
 
-If you're not already authenticated with Anthropic you may need to run:
+### Custom script
 
-```
-export ANTHROPIC_API_KEY=NOT_NEEDED
-```
-
-Run Claude Code:
+You may create a bash script like this and save it to you `~/.local/bin` as `cckimi`:
 
 ```bash
-claude
+#!/bin/bash
+env ANTHROPIC_BASE_URL=http://localhost:7187 ANTHROPIC_API_KEY=not_needed CLAUDE_CODE_MAX_OUTPUT_TOKENS=16384  claude "$@"
 ```
+
+Call it with any ClaudeCode parameters you want.
 
 ## Configuration
 
@@ -62,7 +57,7 @@ The proxy uses clean, provider-agnostic environment variables for any OpenAI-com
 
 - `MAX_OUTPUT_TOKENS` - Maximum output tokens (default: 16384)
 - `PROVIDER_NAME` - Human-readable provider name (auto-detected if not provided)
-- `PROXY_HOST` - Host/IP address for the proxy server (default: 0.0.0.0)
+- `PROXY_HOST` - Host/IP address for the proxy server (default: localhost)
 - `PROXY_PORT` - Port number for the proxy server (default: 7187)
 
 ### **Claude Code Integration Variables**
@@ -78,6 +73,28 @@ The proxy uses clean, provider-agnostic environment variables for any OpenAI-com
 export API_KEY=your_groq_api_key_here
 export BASE_URL=https://api.groq.com/openai/v1
 export MODEL_NAME=moonshotai/kimi-k2-instruct
+export MAX_OUTPUT_TOKENS=16384
+export PROVIDER_NAME=deepinfra
+```
+
+**DeppInfra**
+
+```bash
+export API_KEY=your_deepinfra_api_key_here
+export BASE_URL=https://api.deepinfra.com/v1/openai
+export MODEL_NAME=moonshotai/Kimi-K2-Instruct
+export MAX_OUTPUT_TOKENS=16384
+export PROVIDER_NAME=deepinfra
+```
+
+**BaseTen**
+
+```bash
+export API_KEY=your_baseten_api_key_here
+export BASE_URL=https://inference.baseten.co/v1
+export MODEL_NAME=moonshotai/Kimi-K2-Instruct
+export MAX_OUTPUT_TOKENS=16384
+export PROVIDER_NAME=baseten
 ```
 
 **OpenRouter**
@@ -111,7 +128,7 @@ If you use this, I'd love to hear about your experience with different providers
 
 ## Acknowledgements
 
-Inspired by [claude-code-proxy](https://github.com/1rgs/claude-code-proxy)
+Inspired by [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq)
 
 ## License
 

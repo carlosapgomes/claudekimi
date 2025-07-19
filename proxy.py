@@ -1,7 +1,9 @@
 import json
+import logging
 import os
 import uuid
 from contextlib import asynccontextmanager
+from datetime import datetime
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import uvicorn
@@ -11,6 +13,10 @@ from fastapi.responses import StreamingResponse
 from openai import OpenAI
 from pydantic import BaseModel
 from rich import print
+from rich.console import Console
+from rich.logging import RichHandler
+from rich.panel import Panel
+from rich.text import Text
 
 load_dotenv()
 

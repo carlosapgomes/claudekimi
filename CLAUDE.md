@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a FastAPI proxy server that enables using any OpenAI-compatible API with Claude Code, translating between Anthropic's API format and OpenAI's format. It supports any OpenAI-compatible provider including Groq, OpenRouter, Ollama, local models, and more.
+ClaudeKimi is a proxy server that enables Claude Code to work with any OpenAI-compatible API. It is a FastAPI proxy server that enables using any OpenAI-compatible API with Claude Code, translating between Anthropic's API format and OpenAI's format. It supports any OpenAI-compatible provider including Groq, DeepInfra, Baseten, OpenRouter, Ollama, local models, and more.
 
 ## Quick Start
 
@@ -23,13 +23,20 @@ python proxy.py
 
 The proxy will start on <http://localhost:7187> by default.
 
-### Using with Claude Code
+### Using with Claude Code with a one-liner
 
 ```bash
-export ANTHROPIC_BASE_URL=http://localhost:7187
-export ANTHROPIC_API_KEY=not_needed
-claude
+env ANTHROPIC_BASE_URL=http://localhost:7187 ANTHROPIC_API_KEY=not_needed CLAUDE_CODE_MAX_OUTPUT_TOKENS=16384  claude
 ```
+
+You may create a bash script like this and save it to you `~/.local/bin` as `cckimi`:
+
+```bash
+#!/bin/bash
+env ANTHROPIC_BASE_URL=http://localhost:7187 ANTHROPIC_API_KEY=not_needed CLAUDE_CODE_MAX_OUTPUT_TOKENS=16384  claude "$@"
+```
+
+And call it with any ClaudeCode parameters you want.
 
 ## Configuration
 
@@ -43,7 +50,7 @@ MODEL_NAME=moonshotai/kimi-k2-instruct     # Model name to use
 
 # Optional
 MAX_OUTPUT_TOKENS=16384              # Max output tokens (default: 16384)
-PROXY_HOST=0.0.0.0                  # Server host (default: 0.0.0.0)
+PROXY_HOST=0.0.0.0                  # Server host (default: localhost)
 PROXY_PORT=7187                     # Server port (default: 7187)
 ```
 
@@ -138,4 +145,3 @@ docker run -p 7187:7187 \
 # Enable debug logging
 DEBUG=true python proxy.py
 ```
-

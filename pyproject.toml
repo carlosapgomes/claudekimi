@@ -1,7 +1,7 @@
 [project]
-name = "groq-anthropic-proxy"
+name = "claudekimi"
 version = "0.1.0"
-description = "FastAPI proxy that converts Anthropic tool messages to Groq/Kimi-K2 format"
+description = "ClaudeKimi is an enhanced proxy for AI-assisted coding using Claude and Kimi K2"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [

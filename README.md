@@ -1,6 +1,12 @@
-# FastAPI Proxy for Claude Code with OpenAI-Compatible APIs
+# ClaudeKimi
 
-A FastAPI proxy server that enables using any OpenAI-compatible API (Groq, OpenRouter, Ollama, etc.) with Claude Code by translating between Anthropic's API format and OpenAI's format.
+ClaudeKimi is an enhanced proxy for AI-assisted coding, based on [fakerybakery/claude-code-kimi-groq](https://github.com/fakerybakery/claude-code-kimi-groq). It enables seamless integration of Claude Code with Kimi K2 and extends support to multiple inference providers, including DeepInfra and BaseTen. Licensed under the MIT License.
+
+## Features
+
+- Run Claude Code with Kimi K2 for advanced coding assistance.
+- Generalized to support additional inference providers (DeepInfra, BaseTen).
+- Improves tool-calling functionality from the original project.
 
 ## Quick start (uv)
 

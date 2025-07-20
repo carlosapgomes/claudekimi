@@ -84,13 +84,12 @@ class ProxyLogger:
     @staticmethod
     def response_log(provider, status_code, tokens_in=0, tokens_out=0, duration=""):
         """Log responses with duration and token counts"""
-        if DEBUG:
-            timestamp = datetime.now().strftime("%H:%M:%S")
-            color = "green" if status_code < 400 else "red"
-            tokens_str = f" ({tokens_in}→{tokens_out} tokens)" if tokens_in > 0 else ""
-            console.print(
-                f"[dim][{timestamp}][/] [bold {color}]✓[/bold {color}] {provider.upper()} HTTP {status_code}{tokens_str}"
-            )
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        color = "green" if status_code < 400 else "red"
+        tokens_str = f" ({tokens_in}→{tokens_out} tokens)" if tokens_in > 0 else ""
+        console.print(
+            f"[dim][{timestamp}][/] [bold {color}]✓[/bold {color}] {provider.upper()} HTTP {status_code}{tokens_str}"
+        )
 
     @staticmethod
     def tool_usage(name, params):
@@ -335,11 +334,109 @@ async def log_requests(request: Request, call_next):
 
     if request.url.path == "/v1/messages" and request.method == "POST":
         duration = f"{time.time() - start_time:.2f}s"
-        ProxyLogger.response_log(
-            config.provider_name, response.status_code, duration=duration
-        )
-
+        
+        # Try to extract token usage from response body for middleware logging
+        tokens_in = 0
+        tokens_out = 0
+        
+        # We use the response logging from the main route handler instead
+        # to avoid double logging. The main handler already includes token info.
+        
     return response
+
+
+# ---------- Streaming Response Handler ----------
+async def handle_streaming_response(completion_params: dict):
+    """Handle streaming responses with proper token usage reporting"""
+    
+    def generate_stream():
+        try:
+            stream = client.chat.completions.create(**completion_params, stream=True)
+            
+            total_input_tokens = 0
+            total_output_tokens = 0
+            
+            # Send initial message start
+            message_start = {
+                "type": "message_start",
+                "message": {
+                    "id": f"msg_{uuid.uuid4().hex[:12]}",
+                    "type": "message",
+                    "role": "assistant",
+                    "model": f"{config.provider_name}/{config.model_name}",
+                    "content": [],
+                    "stop_reason": None,
+                    "stop_sequence": None,
+                    "usage": {"input_tokens": 0, "output_tokens": 0}
+                }
+            }
+            yield f"data: {json.dumps(message_start)}\n\n"
+            
+            # Send content block start
+            content_start = {
+                "type": "content_block_start",
+                "index": 0,
+                "content_block": {"type": "text", "text": ""}
+            }
+            yield f"data: {json.dumps(content_start)}\n\n"
+            
+            for chunk in stream:
+                if chunk.usage:
+                    # Update token counts from usage chunk
+                    total_input_tokens = chunk.usage.prompt_tokens or 0
+                    total_output_tokens = chunk.usage.completion_tokens or 0
+                
+                if chunk.choices and chunk.choices[0]:
+                    delta = chunk.choices[0].delta
+                    
+                    if delta.content:
+                        response_chunk = {
+                            "type": "content_block_delta",
+                            "index": 0,
+                            "delta": {"type": "text_delta", "text": delta.content}
+                        }
+                        yield f"data: {json.dumps(response_chunk)}\n\n"
+            
+            # Send content block stop
+            yield f"data: {json.dumps({'type': 'content_block_stop', 'index': 0})}\n\n"
+            
+            # Send message stop with final usage
+            final_chunk = {
+                "type": "message_stop",
+                "usage": {
+                    "input_tokens": total_input_tokens,
+                    "output_tokens": total_output_tokens
+                }
+            }
+            yield f"data: {json.dumps(final_chunk)}\n\n"
+            yield "data: [DONE]\n\n"
+            
+            # Log token usage for streaming
+            ProxyLogger.response_log(
+                config.provider_name,
+                200,
+                tokens_in=total_input_tokens,
+                tokens_out=total_output_tokens,
+            )
+            
+        except Exception as e:
+            ProxyLogger.error(str(e), config.provider_name)
+            error_chunk = {
+                "type": "error",
+                "error": {"type": "api_error", "message": str(e)}
+            }
+            yield f"data: {json.dumps(error_chunk)}\n\n"
+    
+    return StreamingResponse(
+        generate_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "text/event-stream",
+            "Transfer-Encoding": "chunked",
+        }
+    )
 
 
 # ---------- Main Proxy Route ----------
@@ -376,6 +473,9 @@ async def proxy(request: MessagesRequest):
             completion_params["tools"] = tools
             completion_params["tool_choice"] = request.tool_choice
 
+        if request.stream:
+            return await handle_streaming_response(completion_params)
+            
         completion = client.chat.completions.create(**completion_params)
 
         choice = completion.choices[0]
